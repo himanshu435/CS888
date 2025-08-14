@@ -1,0 +1,63 @@
+\section{Related Work}
+Attempts to extract secrets from computational devices by observing indirect, uninten-
+tional effects have been documented since World War II [1]. As computing advanced,
+attacks exploiting these ”side channels” gradually found their way into cryptographic
+research and security engineering. In the late 1990s, Kocher et al. demonstrated that
+subtle variations in hardware power consumption could reveal cryptographic secrets, es-
+tablishing the field of differential power analysis \cite{10.1007/3-540-48405-1_2}. This insight rapidly spurred research
+into other physical side channels—electromagnetic emissions, timing measurements, and
+even acoustic signals were shown to leak sensitive data, especially from cryptographic
+algorithms.
+Early side-channel attacks typically required an attacker with physical access, spe-
+cialized equipment, and careful target profiling. Such constraints meant desktop-class
+systems and servers were deemed relatively immune. This changed with the emergence
+of microarchitectural attacks: researchers showed that features like branch prediction, speculative execution, and sophisticated cache hierarchies could leave measurable fingerprints that software alone could exploit \cite{8835233}\cite{3b07f496768442f48538a30b9f302940}. Today, side-channel attacks threaten nearly every class of modern computer, regardless of their physical security environment. 
+\subsection{Power Side Channel Attacks}
+Among physical side-channel vectors, power analysis occupies a prominent position due
+to its direct relationship with transistor-level circuit activity . Any bit flip in digital
+CMOS logic produces a measurable change in the processor’s power profile; the overall
+power draw at a given cycle thus encodes both the current operation type and processed
+data values. Power analysis was initially regarded as a hardware security threat confined to devices like smartcards or cryptographic accelerators, demanding direct probing and oscilloscopes for exploitation.
+Recent advances have demonstrated, however, that software-accessible energy moni-
+toring features in commodity processors offer sufficient resolution for attackers to infer
+Instructive power traces are commonly used in power analysis. Equation~\ref{eq:Power_Consumption} presents the primary sources of power consumption, where $\alpha$ is the probability of a voltage transition, $C$ is the load capacitance, $V_{dd}$ is the supply voltage, $F$ is the clock frequency, $I_{\text{sc}}$ is the short-circuit current (when NMOS and PMOS transistors are active simultaneously), and $I_{\text{leak}}$ is the leakage current~\cite{371964}.
+
+
+\begin{align}
+P &= P_{\text{switching}} + (P_{\text{short-circuit}} + P_{\text{leakage}}) \nonumber \\
+  &= \alpha \cdot C \cdot V_{dd}^2 \cdot F + I_{\text{sc}} \cdot V_{dd} + I_{\text{leak}} \cdot V_{dd}
+  \label{eq:Power_Consumption}
+\end{align}
+For instance, energy readouts and update rate of the energy counters varies by domain and microarchitecture which are typically computed using \( E_{\text{joules}} = \text{Raw}_{\text{Value}} \times \text{Energy Unit (Joules)} \).
+
+\subsection{Variants of Power Analysis}
+Power side-channel attacks exploit the fact that the power consumption of a processor’s CMOS circuits is data-dependent. The instantaneous power consumption of a circuit can be divided into static and dynamic components. While static power is due to leakage currents, dynamic power is consumed during state transitions, such as when transistors switch from 0 to 1 or vice versa. This switching power is significantly larger than other components and is directly influenced by the data being processed and the operation being performed. An attacker can measure these variations to deduce secret information.
+\subsubsection{Simple Power Analysis (SPA)}
+Simple Powe Analysis involves visually or algorithmically analyzing single or small sets of power consumption traces to identify large-scale differences that correspond to specific operations or code paths~\cite{10.1007/3-540-48405-1_2}. For example, the classic square-
+and-multiply implementation of RSA can leak the secret key if a squaring operation is always performed, but an additional multiply operation only occurs for key bits set to ’1’. This difference creates detectable power patterns, allowing attackers to deduce secret bits from a handful of traces. While SPA is powerful when implementation differences are pronounced and measurement noise is low, it can often be mitigated by enforcing strictly uniform operation sequences~\cite{10.1007/3-540-48405-1_2}.
+\subsubsection{Differential Power Analysis (DPA)}
+Differential Power Analysis uses statistical methods to amplify small variations in power consumption that correlate with secret data~\cite{10.1007/3-540-48405-1_2}. An attacker collects a large number of power traces while the device processes a number of varying, but
+known, inputs. By partitioning traces based on a hypothesis about internal computation (such as a key bit or byte), and then comparing the average power consumption of each partition, data-independent effects and random noise are averaged out, while subtler, data-dependent differences are exposed. DPA dramatically expands the range
+of exploitable leakages, working even when SPA fails, and poses a threat to nearly all 
+cryptographic implementations not designed with side channels in mind.
+\subsubsection{Correlation Power Analysis}
+Correlation Power Analysis (CPA) builds on the DPA methodology by incorporating explicit leakage models. Instead of merely comparing averages, attackers hypothesize intermediate computation values (e.g., the output of an S-box or register value during encryption) and use a model—such as the Hamming weight or Hamming distance to
+predict the device’s power consumption for each guess. For each candidate key, a vector of predicted power values is generated and compared with the actual measured power traces using the Pearson correlation coefficient—a statistical measure of linear dependence between two variables. The key candidate with the highest correlation value is considered the most likely to be correct~\cite{10.1007/978-3-540-28632-5_2}. By leveraging statistical correlation, CPA can reveal subtle, systematic leakage that might elude simpler analyses, making it a standard and powerful technique for practical side-channel cryptanalysis. To recover a secret value, we compute the correlation $\rho(p, h)$ between the observed power consumptions $p_n$ and hypothetical leakage values $h_n$ over all $N$ traces. The choice of $h$ depends on the targeted operation and the leakage characteristics of the target implementation and processor. 
+
+For example, for recovering byte 0 of the round key in the final round of AES, a common choice (given a key candidate $k$) is:
+\begin{equation}
+h^k_n = HW\left(SBox^{-1}\left(c^0_n \oplus k\right)\right)
+\end{equation}
+where $c^0_n$ is byte 0 of the $n$th ciphertext, and $HW$ denotes the Hamming weight. Computing $\rho_k(p, h^k)$ for all candidates $k = 0 \dots 255$, the correct key candidate can be identified as the one with maximum correlation. This process is repeated for each byte. 
+
+Other choices of $h$ are possible, e.g., when targeting the XOR in the first round of AES:
+\begin{equation}
+h^k_n = HW\left(x^0_n \oplus k\right)
+\end{equation}
+
+For a given number of traces $N$, the noise level is:
+\begin{equation}
+\rho_{\text{noise}} = \frac{4}{\sqrt{N}}
+\end{equation}
+Only correlations $\rho \geq \rho_{\text{noise}}$ are considered significant.
+

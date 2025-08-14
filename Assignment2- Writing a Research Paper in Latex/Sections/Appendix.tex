@@ -1,0 +1,10 @@
+\appendix
+\section{Appendix}
+\label{sec:appendix}
+While we focus on Intel’s RAPL implementation throughout this work, other microarchitectures offer different interfaces to obtain the energy consumption of the core.
+AMD: Since the Zen (family 17H)  microarchitecture, AMD CPUs have provided a RAPL interface [2]. However, little documentation is available regarding its implementation. 
+Power consumption values for the core and package domains are provided respectively in the CORE\_ENERGY\_STAT and
+PKG\_ENERGY\_STAT MSRs. A notable difference from Intel RAPL is that the core domain is accessible per-core rather than across all cores of the CPU, which substantially reduces
+measurement noise. An attacker targeting AMD currently requires root privileges to read the MSRs, as the Linux powercap driver
+only establishes a user-accessible sysfs RAPL interface on Intel CPUs. While they lack the RAPL interface, earlier AMD family 15h and 16h CPUs also have power MSRs which provide consumption estimates based on platform activity levels. Unfortunately, none were available to us for evaluation purposes. However, we believe systems with these
+CPUs may be vulnerable to user-space attacks because if the fam15h\_power driver is loaded, power values can be read from user space via sysfs.

@@ -1,0 +1,17 @@
+\section{Introduction}
+Modern processors achieve high performance through complex microarchitectural features designed to maximize instruction throughput. Two of the most significant are out-of-order execution and speculative execution. Instead of processing instructions in the strict, sequential order in which they appear in the program code, the CPU internally reorders them to execute instructions whose data is ready, rather than stalling on one that is waiting (e.g., for a slow memory access). Building on this, speculative execution allows
+the CPU to predict the outcome of a conditional branch (e.g., an ‘if‘ statement) and begin execution of instructions from the predicted path before the condition is actually resolved \cite{8835233}.
+These optimizations are managed by a deep pipeline of internal buffers and schedulers that are invisible to the programmer. If a prediction is correct, the results are committed to the architectural state (the registers and memory visible to the software), yielding a significant performance gain. If a prediction is wrong, the CPU discards the results from the incorrect path and starts over from the correct one. While the final architectural state remains correct, the act of transiently executing these mispredicted instructions is not without consequence. This transient execution can alter the processor’s underlying microarchitectural state—for instance, by loading data into a cache or training a branch
+predictor. These changes create unintentional information flows known as side channels, which can be observed and exploited by an attacker to infer secret data \cite{3b07f496768442f48538a30b9f302940}.\\
+To summarize, we make the following contributions:
+\begin{enumerate}
+\item We established a compatible hardware and software environment on a modern Intel CPU
+running the latest microcode updates that disable TSX and obfuscate RAPL readings.
+\item We determined that the instruction-level power signatures remain distinguishable through the
+mitigated RAPL interface by replicating the instruction benchmarking experiments.
+\item We investigated the potential for a privileged attack on an RSA implementation within
+an SGX enclave by demonstrating that the foundational power leakage primitive
+still exists post-mitigation.
+\end{enumerate}
+\textbf{Outline:} Section 2 presents a review of the foundational literature on related microarchitectural attacks and the core technologies enabling PLATYPUS. Section 3 details the methodology and specific configuration of the experimental setup. Section 4 presents the results from the reproduced experiments and discusses their
+significance. We conclude in Section 5.
