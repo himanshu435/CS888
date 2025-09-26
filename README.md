@@ -29,57 +29,242 @@ Neither share alone reveals information about $x$, so the scheme is *perfectly s
 
 ---
 
-## Secure Multiplication via Beaver Triples
+Secure Multiplication via Beaver Triples
 
-Given secret-shared values \([x] = (x_0, x_1)\) and \([y] = (y_0, y_1)\), we want to compute \([z]\) such that:
+Given secret-shared values $[x] = (x_0, x_1)$ and $[y] = (y_0, y_1)$, we want to compute $[z]$ such that:
 
-$$
-z = x \cdot y, \qquad [z] = (z_0, z_1)
-$$
+𝑧
+=
+𝑥
+⋅
+𝑦
+,
+[
+𝑧
+]
+=
+(
+𝑧
+0
+,
+𝑧
+1
+)
+z=x⋅y,[z]=(z
+0
+	​
 
-### Preprocessed Triple
+,z
+1
+	​
 
-A *Beaver triple* is a preprocessed sharing:
+)
+Preprocessed Triple
 
-$$
-[a], [b], [c] \quad \text{with} \quad c = a \cdot b
-$$
+A Beaver triple is a preprocessed sharing:
+
+[
+𝑎
+]
+,
+[
+𝑏
+]
+,
+[
+𝑐
+]
+with
+𝑐
+=
+𝑎
+⋅
+𝑏
+[a],[b],[c]withc=a⋅b
 
 where each value is secret-shared between the parties.
 
-### Protocol
+Protocol
 
-1. Each party locally computes:
+Each party locally computes:
 
-   $$
-   e_i = x_i - a_i, \qquad f_i = y_i - b_i
-   $$
+𝑒
+𝑖
+=
+𝑥
+𝑖
+−
+𝑎
+𝑖
+,
+𝑓
+𝑖
+=
+𝑦
+𝑖
+−
+𝑏
+𝑖
+e
+i
+	​
 
-   and exchanges \(e_i, f_i\).
+=x
+i
+	​
 
-2. After exchange, both reconstruct:
+−a
+i
+	​
 
-   $$
-   e = e_0 + e_1, \qquad f = f_0 + f_1
-   $$
+,f
+i
+	​
 
-   Note that \(e = x - a, f = y - b\), but neither \(x\) nor \(y\) is revealed.
+=y
+i
+	​
 
-3. Each party computes its share of \(z\):
+−b
+i
+	​
 
-   $$
-   z_i = c_i + e \cdot b_i + f \cdot a_i + \delta_i \cdot (e \cdot f),
-   $$
 
-   where \(\delta_0 = 1, \delta_1 = 0\).
+and exchanges $(e_i, f_i)$.
+
+After exchange, both reconstruct:
+
+𝑒
+=
+𝑒
+0
++
+𝑒
+1
+,
+𝑓
+=
+𝑓
+0
++
+𝑓
+1
+e=e
+0
+	​
+
++e
+1
+	​
+
+,f=f
+0
+	​
+
++f
+1
+	​
+
+
+Note: $e = x - a$, $f = y - b$, but neither $x$ nor $y$ is revealed.
+
+Each party computes its share of $z$:
+
+𝑧
+𝑖
+=
+𝑐
+𝑖
++
+𝑒
+⋅
+𝑏
+𝑖
++
+𝑓
+⋅
+𝑎
+𝑖
++
+𝛿
+𝑖
+⋅
+(
+𝑒
+⋅
+𝑓
+)
+,
+z
+i
+	​
+
+=c
+i
+	​
+
++e⋅b
+i
+	​
+
++f⋅a
+i
+	​
+
++δ
+i
+	​
+
+⋅(e⋅f),
+
+where $\delta_0 = 1, \delta_1 = 0$.
 
 Summing yields:
 
-$$
-z = z_0 + z_1 = ab + e b + f a + e f = (a+e)(b+f) = xy
-$$
+𝑧
+=
+𝑧
+0
++
+𝑧
+1
+=
+𝑎
+𝑏
++
+𝑒
+𝑏
++
+𝑓
+𝑎
++
+𝑒
+𝑓
+=
+(
+𝑎
++
+𝑒
+)
+(
+𝑏
++
+𝑓
+)
+=
+𝑥
+𝑦
+z=z
+0
+	​
 
-Thus multiplication is securely computed in **one round**.
++z
+1
+	​
+
+=ab+eb+fa+ef=(a+e)(b+f)=xy
+
+Thus multiplication is securely computed in one round.
 
 ---
 
