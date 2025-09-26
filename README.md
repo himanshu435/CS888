@@ -49,15 +49,16 @@ where each value is secret-shared between the parties.
 ### Protocol
 1. Each party locally computes:
    $
-   e_i = x_i - a_i, \qquad f_i = y_i - b_i
+   e_i = x_i - a_i,
+   f_i = y_i - b_i
    $
    and exchanges $e_i, f_i$.
-2. After exchange, both reconstruct:
+3. After exchange, both reconstruct:
    $$
    e = (e_0 + e_1), \qquad f = (f_0 + f_1).
    $$
    Note that $e = x - a, f = y - b$, but neither $x$ nor $y$ is revealed.
-3. Each party computes its share of $z$:
+4. Each party computes its share of $z$:
    $$
    z_i = c_i + e \cdot b_i + f \cdot a_i + \delta_i \cdot (e \cdot f),
    $$
