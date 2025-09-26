@@ -8,22 +8,24 @@
 
 ## Additive Secret Sharing
 
-We work over the ring \(\mathbb{Z}_{2^{32}}\).  
-Any secret \(x \in \mathbb{Z}_{2^{32}}\) is split between two parties \(P_0\) and \(P_1\) as:
+We work over the ring $\mathbb{Z}_{2^{32}}$.
+
+Any secret $x \in \mathbb{Z}_{2^{32}}$ is split between two parties $P_0$ and $P_1$ as:
 
 $$
 x = x_0 + x_1 \pmod{2^{32}}
 $$
 
-- \(x_0 \gets_R \mathbb{Z}_{2^{32}}\) chosen uniformly at random.  
-- \(x_1 = x - x_0 \pmod{2^{32}}\).  
+- $x_0 \gets_R \mathbb{Z}_{2^{32}}$ chosen uniformly at random.
+- $x_1 = x - x_0 \pmod{2^{32}}$
 
 Thus:
 
-- \(P_0\) learns only \(x_0\), which is uniformly random.  
-- \(P_1\) learns only \(x_1\), which is uniformly random.  
+- $P_0$ learns only $x_0$, which is uniformly random.
+- $P_1$ learns only $x_1$, which is uniformly random.
 
-Neither share alone reveals information about \(x\), so the scheme is *perfectly secure*: for any \(x\), the distribution of each share is independent of the secret.
+Neither share alone reveals information about $x$, so the scheme is *perfectly secure*: for any $x$, the distribution of each share is independent of the secret.
+
 
 ---
 
