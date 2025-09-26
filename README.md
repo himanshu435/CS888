@@ -51,9 +51,7 @@ where each value is secret-shared between the parties.
    $e_i = x_i - a_i, f_i = y_i - b_i$
    and exchanges $e_i, f_i$.
 3. After exchange, both reconstruct:
-   $$
-   e = (e_0 + e_1), \qquad f = (f_0 + f_1).
-   $$
+   $e = (e_0 + e_1), f = (f_0 + f_1).$
    Note that $e = x - a, f = y - b$, but neither $x$ nor $y$ is revealed.
 4. Each party computes its share of $z$:
    $$
