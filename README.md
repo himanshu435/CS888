@@ -58,9 +58,7 @@ where each value is secret-shared between the parties.
    where $\delta_0 = 1, \delta_1 = 0$.
 
 Summing yields:
-$$
-z = z_0 + z_1 = ab + e b + f a + e f = (a+e)(b+f) = xy.
-$$
+$z = z_0 + z_1 = ab + e b + f a + e f = (a+e)(b+f) = xy.$
 
 Thus multiplication is securely computed in **one round**.
 
