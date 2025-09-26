@@ -54,9 +54,7 @@ where each value is secret-shared between the parties.
    $e = (e_0 + e_1), f = (f_0 + f_1).$
    Note that $e = x - a, f = y - b$, but neither $x$ nor $y$ is revealed.
 4. Each party computes its share of $z$:
-   $$
-   z_i = c_i + e \cdot b_i + f \cdot a_i + \delta_i \cdot (e \cdot f),
-   $$
+   $z_i = c_i + e \cdot b_i + f \cdot a_i + \delta_i \cdot (e \cdot f),$
    where $\delta_0 = 1, \delta_1 = 0$.
 
 Summing yields:
