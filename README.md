@@ -29,247 +29,50 @@ Neither share alone reveals information about $x$, so the scheme is *perfectly s
 
 ---
 
-Secure Multiplication via Beaver Triples
 
+## Secure Multiplication via Beaver Triples
 Given secret-shared values $[x] = (x_0, x_1)$ and $[y] = (y_0, y_1)$, we want to compute $[z]$ such that:
 
-𝑧
-=
-𝑥
-⋅
-𝑦
-,
-[
-𝑧
-]
-=
-(
-𝑧
-0
-,
-𝑧
-1
-)
-z=x⋅y,[z]=(z
-0
-	​
+$$
+z = x \cdot y, \qquad [z] = (z_0, z_1).
+$$
 
-,z
-1
-	​
+### Preprocessed Triple
+A *Beaver triple* is a preprocessed sharing:
 
-)
-Preprocessed Triple
-
-A Beaver triple is a preprocessed sharing:
-
-[
-𝑎
-]
-,
-[
-𝑏
-]
-,
-[
-𝑐
-]
-with
-𝑐
-=
-𝑎
-⋅
-𝑏
-[a],[b],[c]withc=a⋅b
+$$
+[a], [b], [c] \quad \text{with} \quad c = a \cdot b
+$$
 
 where each value is secret-shared between the parties.
 
-Protocol
-
-Each party locally computes:
-
-𝑒
-𝑖
-=
-𝑥
-𝑖
-−
-𝑎
-𝑖
-,
-𝑓
-𝑖
-=
-𝑦
-𝑖
-−
-𝑏
-𝑖
-e
-i
-	​
-
-=x
-i
-	​
-
-−a
-i
-	​
-
-,f
-i
-	​
-
-=y
-i
-	​
-
-−b
-i
-	​
-
-
-and exchanges $(e_i, f_i)$.
-
-After exchange, both reconstruct:
-
-𝑒
-=
-𝑒
-0
-+
-𝑒
-1
-,
-𝑓
-=
-𝑓
-0
-+
-𝑓
-1
-e=e
-0
-	​
-
-+e
-1
-	​
-
-,f=f
-0
-	​
-
-+f
-1
-	​
-
-
-Note: $e = x - a$, $f = y - b$, but neither $x$ nor $y$ is revealed.
-
-Each party computes its share of $z$:
-
-𝑧
-𝑖
-=
-𝑐
-𝑖
-+
-𝑒
-⋅
-𝑏
-𝑖
-+
-𝑓
-⋅
-𝑎
-𝑖
-+
-𝛿
-𝑖
-⋅
-(
-𝑒
-⋅
-𝑓
-)
-,
-z
-i
-	​
-
-=c
-i
-	​
-
-+e⋅b
-i
-	​
-
-+f⋅a
-i
-	​
-
-+δ
-i
-	​
-
-⋅(e⋅f),
-
-where $\delta_0 = 1, \delta_1 = 0$.
+### Protocol
+1. Each party locally computes:
+   $$
+   e_i = x_i - a_i, \qquad f_i = y_i - b_i
+   $$
+   and exchanges $e_i, f_i$.
+2. After exchange, both reconstruct:
+   $$
+   e = (e_0 + e_1), \qquad f = (f_0 + f_1).
+   $$
+   Note that $e = x - a, f = y - b$, but neither $x$ nor $y$ is revealed.
+3. Each party computes its share of $z$:
+   $$
+   z_i = c_i + e \cdot b_i + f \cdot a_i + \delta_i \cdot (e \cdot f),
+   $$
+   where $\delta_0 = 1, \delta_1 = 0$.
 
 Summing yields:
+$$
+z = z_0 + z_1 = ab + e b + f a + e f = (a+e)(b+f) = xy.
+$$
 
-𝑧
-=
-𝑧
-0
-+
-𝑧
-1
-=
-𝑎
-𝑏
-+
-𝑒
-𝑏
-+
-𝑓
-𝑎
-+
-𝑒
-𝑓
-=
-(
-𝑎
-+
-𝑒
-)
-(
-𝑏
-+
-𝑓
-)
-=
-𝑥
-𝑦
-z=z
-0
-	​
-
-+z
-1
-	​
-
-=ab+eb+fa+ef=(a+e)(b+f)=xy
-
-Thus multiplication is securely computed in one round.
+Thus multiplication is securely computed in **one round**.
 
 ---
 
 ## Secure Inner Product
-
 Given two secret-shared vectors:
 
 $$
@@ -279,28 +82,26 @@ $$
 we want to compute:
 
 $$
-d = \langle u, v \rangle = \sum_{i=1}^n u_i v_i
+d = \langle u, v \rangle = \sum_{i=1}^n u_i v_i.
 $$
 
 ### Naïve Approach
-
-Compute each product \([u_i v_i]\) via Beaver triples, then sum locally.  
-This requires \(n\) secure multiplications and thus \(n\) rounds.
+Compute each product $[u_i v_i]$ via Beaver triples, then sum locally.  
+This requires $n$ secure multiplications and thus $n$ triples.
 
 ### Batched Approach
-
 Mask vectors at once:
 
 $$
 e = u - a, \quad f = v - b
 $$
 
-for vector triples \((a, b, c)\) with \(c = \langle a, b \rangle\).  
+for vector triples $(a, b, c)$ with $c = \langle a, b \rangle$.  
 
 Then:
 
 $$
-\langle u, v \rangle = \langle a, b \rangle + \langle e, b \rangle + \langle f, a \rangle + \langle e, f \rangle
+\langle u, v \rangle = \langle a, b \rangle + \langle e, b \rangle + \langle f, a \rangle + \langle e, f \rangle.
 $$
 
 This yields the inner product in a **single round**.
@@ -308,42 +109,37 @@ This yields the inner product in a **single round**.
 ---
 
 ## Secure Update of Dot Products
-
-Suppose we already hold \([d] = [\langle u, v \rangle]\).  
-If \(v\) is updated to \(v' = v + \Delta v\), then:
+Suppose we already hold $[d] = [\langle u, v \rangle]$.  
+If $v$ is updated to $v' = v + \Delta v$, then:
 
 $$
-\langle u, v' \rangle = \langle u, v \rangle + \langle u, \Delta v \rangle
+\langle u, v' \rangle = \langle u, v \rangle + \langle u, \Delta v \rangle.
 $$
 
 Thus:
-
-1. Compute correction term \(\Delta = \langle u, \Delta v \rangle\) securely.  
-2. Update \([d'] = [d] + [\Delta]\) locally.  
+1. Compute correction term $\Delta = \langle u, \Delta v \rangle$ securely.  
+2. Update $[d'] = [d] + [\Delta]$ locally.  
 
 If only a few coordinates change, the cost is proportional to the number of updates.
 
 ---
 
 ## Communication Rounds
-
-- One multiplication requires one round (exchange of \(e,f\)).  
-- Naïve inner product: \(n\) multiplications \(\Rightarrow n\) rounds.  
+- One multiplication requires one round (exchange of $e,f$).  
+- Naïve inner product: $n$ multiplications $\Rightarrow n$ rounds.  
 - Batched inner product: one round for the entire dot product.  
 - Updates: only require as many multiplications as changed coordinates.  
 
 ---
 
 ## Efficiency and Security
-
 - **Perfect privacy**: each party’s view is independent of the secrets.  
 - **Preprocessing**: Beaver triples can be generated offline.  
 - **Online efficiency**: one round per multiplication (or per dot product if batched).  
 - **Incremental updates**: only recompute correction terms.  
 
----
 
-## Acknowledgements
 
-- I want to thank my friends Paritosh and Riya with whom I discussed the assignment. I also discussed the assignment with Udbhav, who is not enrolled in the course but has knowledge about this course.  
-- I also want to acknowledge that I have used ChatGPT for some code refactoring and for corrections in the documentation.
+## Acknowledgement
+- I want to thank my friends Paritosh and Riya with whom I discussed about the assignment. I also discussed the assignment with Udbhav who is not enrolled in the course but have the knwoledge about this course.
+- I also want to acknowledge that I have used chatgpt for some code refactoration and for corrections in the documentation.
