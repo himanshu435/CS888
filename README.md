@@ -48,10 +48,7 @@ where each value is secret-shared between the parties.
 
 ### Protocol
 1. Each party locally computes:
-   $
-   e_i = x_i - a_i,
-   f_i = y_i - b_i
-   $
+   $e_i = x_i - a_i, f_i = y_i - b_i$
    and exchanges $e_i, f_i$.
 3. After exchange, both reconstruct:
    $$
